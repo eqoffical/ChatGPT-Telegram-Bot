@@ -1,4 +1,3 @@
-# Телеграм бот ChatGPT
 import config
 import logging
 import openai
