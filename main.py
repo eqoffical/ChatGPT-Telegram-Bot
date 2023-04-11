@@ -23,8 +23,9 @@ dp = Dispatcher(bot)
 async def cmd_help(message: types.Message):
     await message.answer("Доступні команди:\n"
                          "/help - Показує всі доступні команди\n"
-                         "/chat - Поговорити з ботом / задати питання\n"
-                         "/status - Показати поточний стан боту")
+                         "/chat - Поговорити зі мною / задати питання\n"
+                         "/status - Показати поточний стан боту\n"
+                         "/git - Мій репозиторій GitHub")
 
 # /start command
 @dp.message_handler(commands=['start'])
@@ -53,9 +54,9 @@ async def cmd_chat(message: types.Message):
         )
 
         await message.answer("Думаю . . .")
-        await message.answer(completion.choices[0].text)
+        await message.reply(completion.choices[0].text)
     else:
-        await message.answer("Будь ласка, напишіть /chat разом зі своїм запитанням.\n"
+        await message.reply("Будь ласка, напишіть /chat разом зі своїм запитанням.\n"
                             "Наприклад: /chat коли був створений python?")
 
 
@@ -71,8 +72,14 @@ async def cmd_status(message: types.Message):
     status_message += f"Я тут сижу вже: {hours:02d}:{minutes:02d}:{seconds:02d}"
     await message.answer(status_message)
 
+# /git command
+@dp.message_handler(commands=['git'])
+async def cmd_help(message: types.Message):
+    link = "https://github.com/eqoffical/ChatGPT-Telegram-Bot.git"
+    await message.answer("Ось посилання на мій репозиторій <a href='{}'>GitHub</a>".format(link), parse_mode=types.ParseMode.HTML)
+
 # message handler
-@dp.message_handler(commands=['help', 'chat', 'status'])
+@dp.message_handler(commands=['help', 'chat', 'status', 'git'])
 async def gpt_answer(message: types.Message):
     pass
 
