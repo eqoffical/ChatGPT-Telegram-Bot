@@ -3,7 +3,7 @@ OpenAI library based python telegram bot.
 
 Language: Ukrainian
 
-<span style="color: yellow;">Before using the bot, you need to install **python** and several libraries.
+<span style="color: red;">Before using the bot, you need to install **python** and several libraries.
 You also need to put tokens to the config and your username telegram to main file (details below).</span>
 
 To host the bot, you need any device with a command line (for Windows, it's cmd, for Android, it's termux). Then install python (pkg install python), libraries (pip install nameOfLibrary). After you have configured the bot, you need to change the directory (cd /path/) to the folder where the bot files are located (! CONFIG and MAIN MUST BE IN THE SAME FOLDER !), and then run the bot (python main.py).
