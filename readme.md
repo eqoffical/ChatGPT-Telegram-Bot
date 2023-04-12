@@ -6,4 +6,3 @@ Language: Ukrainian
 This bot also requires some python libraries:
 - openai
 - aiogram
-- googletrans
