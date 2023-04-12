@@ -3,6 +3,7 @@ OpenAI library based python telegram bot.
 
 Language: Ukrainian
 
+# IMPORTANT
 <span style="color: yellow;">Before using the bot, you need to install **python** and several libraries.
 You also need to put tokens to the config and your username telegram to main file (details below).</span>
 
