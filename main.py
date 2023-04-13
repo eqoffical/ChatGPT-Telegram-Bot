@@ -104,7 +104,7 @@ async def cmd_help(message: types.Message):
 @dp.message_handler(commands=['kill'])
 async def cmd_kill(message: types.Message):
     # Check if the command was issued by the authorized user
-    if message.from_user.username == 'eqoffical': # Put here your username
+    if message.from_user.username == '': # Put here your username
         await message.reply("Я пішов спати 😴\n"
                             "На добраніч!")
         # Stop the event loop
