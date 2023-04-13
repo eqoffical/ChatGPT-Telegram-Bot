@@ -11,6 +11,9 @@ logging.basicConfig(level=logging.INFO)
 # launch time
 start_time = time.time()
 
+# counting variable
+countRequests = 0
+
 # init openai
 openai.api_key = config.OPENAI_TOKEN
 
@@ -38,6 +41,9 @@ async def cmd_start(message: types.Message):
 # chat command
 @dp.message_handler(commands=['chat'])
 async def cmd_chat(message: types.Message):
+    # increment the count variable each time the function is executed
+    global countRequests
+
     # remove the '/chat' command from the user's message to get the question
     question = message.text.replace('/chat', '', 1).strip()
     if question:
@@ -56,6 +62,9 @@ async def cmd_chat(message: types.Message):
 
         await message.answer("Думаю . . .")
         await message.reply(completion.choices[0].text)
+        
+        countRequests += 1  # increment the chat command count      
+
     else:
         await message.reply("Будь ласка, напишіть /chat разом зі своїм запитанням.\n"
                             "Наприклад: /chat коли був створений python?")
@@ -68,9 +77,12 @@ async def cmd_status(message: types.Message):
     elapsed_time = int(current_time - start_time) # time elapsed since the bot was launched in seconds
     hours, rem = divmod(elapsed_time, 3600) # converting time to hours, minutes, and seconds
     minutes, seconds = divmod(rem, 60)
-    
+
+    # add the chat command count to the status message
     status_message = f"Я онлайн і готовий до спілкування!\n"
-    status_message += f"Я тут сижу вже: {hours:02d}:{minutes:02d}:{seconds:02d}"
+    status_message += f"Я тут сижу вже: {hours:02d}:{minutes:02d}:{seconds:02d}\n"
+    status_message += f"Сьогодні зі мною спілкувалися {countRequests} разів 👀"
+    
     await message.answer(status_message)
 
 # /git command
