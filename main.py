@@ -12,7 +12,7 @@ logging.basicConfig(level=logging.INFO)
 start_time = time.time()
 
 # counting variable
-countRequests = 0
+count_requests = 0
 
 # init openai
 openai.api_key = config.OPENAI_TOKEN
@@ -42,7 +42,7 @@ async def cmd_start(message: types.Message):
 @dp.message_handler(commands=['chat'])
 async def cmd_chat(message: types.Message):
     # increment the count variable each time the function is executed
-    global countRequests
+    global count_requests
 
     # remove the '/chat' command from the user's message to get the question
     question = message.text.replace('/chat', '', 1).strip()
@@ -63,7 +63,7 @@ async def cmd_chat(message: types.Message):
         await message.answer("Думаю . . .")
         await message.reply(completion.choices[0].text)
         
-        countRequests += 1  # increment the chat command count      
+        count_requests += 1  # increment the chat command count      
 
     else:
         await message.reply("Будь ласка, напишіть /chat разом зі своїм запитанням.\n"
@@ -78,12 +78,21 @@ async def cmd_status(message: types.Message):
     hours, rem = divmod(elapsed_time, 3600) # converting time to hours, minutes, and seconds
     minutes, seconds = divmod(rem, 60)
 
+    count = count_requests
+    if count % 10 == 1 and count % 100 != 11:
+        times = "раз"
+    elif count % 10 in [2, 3, 4] and count % 100 not in [12, 13, 14]:
+        times = "рази"
+    else:
+        times = "разів"
+    
     # add the chat command count to the status message
     status_message = f"Я онлайн і готовий до спілкування!\n"
     status_message += f"Я тут сижу вже: {hours:02d}:{minutes:02d}:{seconds:02d}\n"
-    status_message += f"Сьогодні зі мною спілкувалися {countRequests} разів 👀"
+    status_message += f"Сьогодні зі мною спілкувалися {count} {times} 👀"
     
     await message.answer(status_message)
+
 
 # /git command
 @dp.message_handler(commands=['git'])
@@ -95,7 +104,7 @@ async def cmd_help(message: types.Message):
 @dp.message_handler(commands=['kill'])
 async def cmd_kill(message: types.Message):
     # Check if the command was issued by the authorized user
-    if message.from_user.username == '': # Put here your username
+    if message.from_user.username == 'eqoffical': # Put here your username
         await message.reply("Я пішов спати 😴\n"
                             "На добраніч!")
         # Stop the event loop
