@@ -5,20 +5,11 @@ import asyncio
 import time
 from aiogram import Bot, Dispatcher, executor, types
 
-# log
-logging.basicConfig(level=logging.INFO)
-
-# launch time
-start_time = time.time()
-
-# counting variable
-count_requests = 0
-
-# init openai
-openai.api_key = config.OPENAI_TOKEN
-
-# init aiogram
-bot = Bot(token=config.TOKEN)
+logging.basicConfig(level=logging.INFO) # log
+start_time = time.time() # launch time
+count_requests = 0 # counting variable
+openai.api_key = config.OPENAI_TOKEN # init openai
+bot = Bot(token=config.TOKEN) # init aiogram
 dp = Dispatcher(bot)
 
 # /help command
@@ -41,10 +32,7 @@ async def cmd_start(message: types.Message):
 # /chat command
 @dp.message_handler(commands=['chat'])
 async def cmd_chat(message: types.Message):
-    # increment the count variable each time the function is executed
     global count_requests
-
-    # remove the '/chat' command from the user's message to get the question
     command_parts = message.text.split(' ')
     if len(command_parts) > 1 and command_parts[1].startswith('@'):
         command_parts.pop(1)  # remove bot name from the command
@@ -66,7 +54,7 @@ async def cmd_chat(message: types.Message):
         await message.answer("Думаю . . .")
         await message.reply(completion.choices[0].text)
         
-        count_requests += 1  # increment the chat command count      
+        count_requests += 1  # counting   
 
     else:
         await message.reply("Будь ласка, напишіть /chat разом зі своїм запитанням.\n"
@@ -81,6 +69,7 @@ async def cmd_status(message: types.Message):
     hours, rem = divmod(elapsed_time, 3600) # converting time to hours, minutes, and seconds
     minutes, seconds = divmod(rem, 60)
 
+    # ukrainian counting system 
     count = count_requests
     if count % 10 == 1 and count % 100 != 11:
         times = "раз"
@@ -106,7 +95,6 @@ async def cmd_help(message: types.Message):
 # /kill command
 @dp.message_handler(commands=['kill'])
 async def cmd_kill(message: types.Message):
-    # Check if the command was issued by the authorized user
     if message.from_user.username == '': # Put here your username
         await message.reply("Я пішов спати 😴\n"
                             "На добраніч!")
