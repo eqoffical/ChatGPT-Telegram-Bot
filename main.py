@@ -38,14 +38,17 @@ async def cmd_start(message: types.Message):
                         "Чим я можу вам допомогти?\n"
                         "Напишіть /help щоб побачити всі доступні команди.")
 
-# chat command
+# /chat command
 @dp.message_handler(commands=['chat'])
 async def cmd_chat(message: types.Message):
     # increment the count variable each time the function is executed
     global count_requests
 
     # remove the '/chat' command from the user's message to get the question
-    question = message.text.replace('/chat', '', 1).strip()
+    command_parts = message.text.split(' ')
+    if len(command_parts) > 1 and command_parts[1].startswith('@'):
+        command_parts.pop(1)  # remove bot name from the command
+    question = ' '.join(command_parts[1:]).strip()
     if question:
         model_engine = "text-davinci-003"
         max_tokens = 1024  # default 1024
@@ -104,7 +107,7 @@ async def cmd_help(message: types.Message):
 @dp.message_handler(commands=['kill'])
 async def cmd_kill(message: types.Message):
     # Check if the command was issued by the authorized user
-    if message.from_user.username == '': # Put here your username
+    if message.from_user.username == 'eqoffical': # Put here your username
         await message.reply("Я пішов спати 😴\n"
                             "На добраніч!")
         # Stop the event loop
