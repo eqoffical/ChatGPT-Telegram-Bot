@@ -27,16 +27,16 @@ async def cmd_help(message: types.Message):
 async def cmd_start(message: types.Message):
     await message.answer("Привіт 👋\n"
                         "Чим я можу вам допомогти?\n"
-                        "Напишіть /help щоб побачити всі доступні команди.")
+                        "Напишіть /help щоб побачити всі доступні команди")
 
-# /chat command
+# chat command
 @dp.message_handler(commands=['chat'])
 async def cmd_chat(message: types.Message):
+    
     global count_requests
-    command_parts = message.text.split(' ')
-    if len(command_parts) > 1 and command_parts[1].startswith('@'):
-        command_parts.pop(1)  # remove bot name from the command
-    question = ' '.join(command_parts[1:]).strip()
+
+    # remove the '/chat' command from the user's message to get the question
+    question = message.text.replace('/chat', '', 1).strip()
     if question:
         model_engine = "text-davinci-003"
         max_tokens = 1024  # default 1024
@@ -52,14 +52,16 @@ async def cmd_chat(message: types.Message):
         )
 
         await message.answer("Думаю . . .")
-        await message.reply(completion.choices[0].text)
-        
-        count_requests += 1  # counting   
+        if completion.choices[0].text:
+            await message.reply(completion.choices[0].text)
+            count_requests += 1  # counting
+        else:
+            await message.reply("Вибачте, я не придумав 😔\n"
+                                "Напишіть, будь ласка, ще раз")
 
     else:
         await message.reply("Будь ласка, напишіть /chat разом зі своїм запитанням.\n"
                             "Наприклад: /chat коли був створений python?")
-
 
 # /status command
 @dp.message_handler(commands=['status'])
@@ -95,7 +97,7 @@ async def cmd_help(message: types.Message):
 # /kill command
 @dp.message_handler(commands=['kill'])
 async def cmd_kill(message: types.Message):
-    if message.from_user.username == '': # Put here your username
+    if message.from_user.username == 'eqoffical': # Put here your username
         await message.reply("Я пішов спати 😴\n"
                             "На добраніч!")
         # Stop the event loop
