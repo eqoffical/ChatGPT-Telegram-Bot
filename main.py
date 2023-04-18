@@ -5,6 +5,7 @@ import asyncio
 import time
 from aiogram import Bot, Dispatcher, executor, types
 
+username = '' # PUT HERE YOUR USERNAME
 logging.basicConfig(level=logging.INFO) # log
 start_time = time.time() # launch time
 count_requests = 0 # counting variable
@@ -97,7 +98,7 @@ async def cmd_help(message: types.Message):
 # /kill command
 @dp.message_handler(commands=['kill'])
 async def cmd_kill(message: types.Message):
-    if message.from_user.username == '': # Put here your username
+    if message.from_user.username == username: 
         await message.reply("Я пішов спати 😴\n"
                             "На добраніч!")
         # Stop the event loop
