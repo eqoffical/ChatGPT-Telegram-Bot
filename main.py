@@ -46,7 +46,7 @@ async def cmd_chat(message: types.Message):
             engine=model_engine,
             prompt=prompt,
             max_tokens=max_tokens,
-            temperature=0.7,
+            temperature=0.6,
             top_p=1,
             frequency_penalty=0,
             presence_penalty=0
