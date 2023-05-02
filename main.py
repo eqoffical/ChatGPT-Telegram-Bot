@@ -30,7 +30,7 @@ async def cmd_start(message: types.Message):
                         "Чим я можу вам допомогти?\n"
                         "Напишіть /help щоб побачити всі доступні команди")
 
-# chat command
+# /chat command
 @dp.message_handler(commands=['chat'])
 async def cmd_chat(message: types.Message):
     
