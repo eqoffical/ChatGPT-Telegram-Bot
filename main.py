@@ -45,7 +45,7 @@ async def cmd_chat(message: types.Message):
         completion = openai.ChatCompletion.create(
             model=model_engine,  # Use ChatCompletion instead of Completion
             messages=[
-                {"role": "system", "content": "You are a user"},
+                {"role": "system", "content": "Ви - користувач"},
                 {"role": "user", "content": prompt}
             ],
             max_tokens=max_tokens,
@@ -55,17 +55,17 @@ async def cmd_chat(message: types.Message):
             presence_penalty=0
         )
 
-        await message.answer("Thinking...")
+        await message.answer("Думаю . . .")
         if completion.choices and completion.choices[0].message.get("role") == "assistant":
             await message.reply(completion.choices[0].message.get("content"))
             count_requests += 1  # counting
         else:
-            await message.reply("Sorry, I couldn't come up with a response. 😔\n"
-                                "Please try again.")
+            await message.reply("Вибачте, я не придумав 😔\n"
+                                "Напишіть, будь ласка, ще раз")
 
     else:
-        await message.reply("Please type /chat followed by your question.\n"
-                            "For example: /chat When was Python created?")
+        await message.reply("Будь ласка, напишіть /chat разом зі своїм запитанням.\n"
+                            "Наприклад: /chat коли був створений python?")
 
 # /status command
 @dp.message_handler(commands=['status'])
