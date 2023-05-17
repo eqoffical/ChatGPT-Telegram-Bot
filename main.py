@@ -36,15 +36,18 @@ async def cmd_chat(message: types.Message):
     
     global count_requests
 
-    # remove the '/chat' command from the user's message to get the question
+    # Remove the '/chat' command from the user's message to get the question
     question = message.text.replace('/chat', '', 1).strip()
     if question:
-        model_engine = "text-davinci-003"
+        model_engine = "gpt-3.5-turbo"  # previously used text-davinci-003
         max_tokens = 1024  # default 1024
         prompt = question
-        completion = openai.Completion.create(
-            engine=model_engine,
-            prompt=prompt,
+        completion = openai.ChatCompletion.create(
+            model=model_engine,  # Use ChatCompletion instead of Completion
+            messages=[
+                {"role": "system", "content": "You are a user"},
+                {"role": "user", "content": prompt}
+            ],
             max_tokens=max_tokens,
             temperature=0.6,
             top_p=1,
@@ -52,17 +55,17 @@ async def cmd_chat(message: types.Message):
             presence_penalty=0
         )
 
-        await message.answer("Думаю . . .")
-        if completion.choices[0].text:
-            await message.reply(completion.choices[0].text)
+        await message.answer("Thinking...")
+        if completion.choices and completion.choices[0].message.get("role") == "assistant":
+            await message.reply(completion.choices[0].message.get("content"))
             count_requests += 1  # counting
         else:
-            await message.reply("Вибачте, я не придумав 😔\n"
-                                "Напишіть, будь ласка, ще раз")
+            await message.reply("Sorry, I couldn't come up with a response. 😔\n"
+                                "Please try again.")
 
     else:
-        await message.reply("Будь ласка, напишіть /chat разом зі своїм запитанням.\n"
-                            "Наприклад: /chat коли був створений python?")
+        await message.reply("Please type /chat followed by your question.\n"
+                            "For example: /chat When was Python created?")
 
 # /status command
 @dp.message_handler(commands=['status'])
