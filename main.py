@@ -33,17 +33,22 @@ async def cmd_start(message: types.Message):
 # /chat command
 @dp.message_handler(commands=['chat'])
 async def cmd_chat(message: types.Message):
-    
     global count_requests
 
-    # Remove the '/chat' command from the user's message to get the question
-    question = message.text.replace('/chat', '', 1).strip()
-    if question:
-        model_engine = "gpt-3.5-turbo"  # previously used text-davinci-003
+    bot_username = (await bot.get_me()).username # Get the bot's username
+
+    # Check if the bot name is mentioned in the message
+    if f'@{bot_username}' in message.text:
+        prompt = message.text.replace(f'/chat@{bot_username}', '', 1).strip() # Extract the prompt by removing the '/chat@botname' part
+    else:
+        prompt = message.text.replace('/chat', '', 1).strip() # Remove the '/chat' command from the user's message to get the question
+
+    if prompt:
+        await message.answer("Думаю . . .")
+        model_engine = "gpt-3.5-turbo"
         max_tokens = 1024  # default 1024
-        prompt = question
         completion = openai.ChatCompletion.create(
-            model=model_engine,  # Use ChatCompletion instead of Completion
+            model=model_engine,
             messages=[
                 {"role": "system", "content": "Ви - користувач"},
                 {"role": "user", "content": prompt}],
@@ -54,9 +59,9 @@ async def cmd_chat(message: types.Message):
             presence_penalty=0
         )
 
-        await message.answer("Думаю . . .")
-        if completion.choices and completion.choices[0].message.get("role") == "assistant":
-            await message.reply(completion.choices[0].message.get("content"))
+        if completion.choices:
+            bot_reply = completion.choices[0].message['content']
+            await message.reply(bot_reply)
             count_requests += 1  # counting
         else:
             await message.reply("Вибачте, я не придумав 😔\n"
