@@ -46,8 +46,7 @@ async def cmd_chat(message: types.Message):
             model=model_engine,  # Use ChatCompletion instead of Completion
             messages=[
                 {"role": "system", "content": "Ви - користувач"},
-                {"role": "user", "content": prompt}
-            ],
+                {"role": "user", "content": prompt}],
             max_tokens=max_tokens,
             temperature=0.6,
             top_p=1,
